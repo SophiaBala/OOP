@@ -1,0 +1,33 @@
+#include <iostream>
+
+int main() {
+    long long fib1 = 1;  
+    long long fib2 = 1;  
+    long long evenSum = 0; 
+    long long oddSum = 0;  
+    
+    while (fib1 + fib2 <= 100000) {
+        long long nextFib = fib1 + fib2;
+        
+        if (nextFib % 2 == 0) {
+            evenSum += nextFib;
+        } else {
+            oddSum += nextFib;
+        }
+        
+        fib1 = fib2;
+        fib2 = nextFib;
+    }
+    std::cout << oddSum<<std::endl;
+    std::cout << evenSum<<std::endl;
+    
+    if (evenSum > oddSum) {
+        std::cout << "1" << std::endl;
+    } else if (evenSum < oddSum) {
+        std::cout << "-1" << std::endl;
+    } else {
+        std::cout << "0" << std::endl;
+    }
+    
+    return 0;
+}
