@@ -1,0 +1,36 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    int n; // Розмір масиву (7 в даному випадку)
+    std::cout << "Введіть розмір масиву: ";
+    std::cin >> n;
+
+    // Оголошуємо двовимірний масив
+    std::vector<std::vector<int>> matrix(n, std::vector<int>(n));
+
+    // Введення даних для масиву
+    std::cout << "Введіть елементи масиву:" << std::endl;
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            std::cin >> matrix[i][j];
+        }
+    }
+
+    // Сортування елементів кожного рядка за зростанням
+    for (int i = 0; i < n; ++i) {
+        std::sort(matrix[i].begin(), matrix[i].end());
+    }
+
+    // Виведення відсортованого масиву
+    std::cout << "Відсортований масив:" << std::endl;
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            std::cout << matrix[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    return 0;
+}
