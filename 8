@@ -1,0 +1,79 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class ParentClass {
+private:
+    int day;
+    int month;
+    int year;
+
+public:
+
+    ParentClass() : day(1), month(1), year(2000) {
+        cout << "Created standard object" << endl;
+    }
+
+
+    ParentClass(int day, int month, int year) : day(day), month(month), year(year) {
+        cout << "Created parametr object" << endl;
+    }
+
+
+    ~ParentClass() {
+        cout << "Object with date "  << display_date() << " was destroyed." << endl;
+    }
+
+    void set_date(int day, int month, int year) {
+        this->day = day;
+        this->month = month;
+        this->year = year;
+    }
+
+    void get_date(int& day, int& month, int& year) {
+        day = this->day;
+        month = this->month;
+        year = this->year;
+    }
+
+    void increase_year() {
+        year++;
+    }
+
+    void decrease_date(int days) {
+        day -= days;
+        while (day < 1) {
+            month--;
+            if (month < 1) {
+                month = 12;
+                year--;
+            }
+            day += 30; 
+        }
+    }
+
+    string display_date() {
+        return to_string(day) + "/" + to_string(month) + "/" + to_string(year);
+    }
+
+    void display_info() {
+        cout << "Date: " << display_date() << endl;
+    }
+};
+
+int main() {
+    ParentClass parent(25, 10, 2023);
+    parent.display_info();
+
+    parent.increase_year();
+    parent.display_info();
+
+    parent.decrease_date(2);
+    parent.display_info();
+
+    int newDay, newMonth, newYear;
+    parent.get_date(newDay, newMonth, newYear);
+    cout << "New date: " << newDay << "/" << newMonth << "/" << newYear << endl;
+
+    return 0;
+}
