@@ -1,0 +1,122 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class ParentClass {
+private:
+    int day;
+    int month;
+    int year;
+
+public:
+    ParentClass() : day(1), month(1), year(2000) {
+        cout << "Об'єкт створений (за замовчуванням)." << endl;
+    }
+
+    ParentClass(int day, int month, int year) : day(day), month(month), year(year) {
+        cout << "Об'єкт створений (з параметрами)." << endl;
+    }
+
+    // Деструктор
+    ~ParentClass() {
+        cout << "Об'єкт з датою " << display_date() << " був знищений." << endl;
+    }
+
+    void set_date(int day, int month, int year) {
+        this->day = day;
+        this->month = month;
+        this->year = year;
+    }
+
+    void get_date(int& day, int& month, int& year) {
+        day = this->day;
+        month = this->month;
+        year = this->year;
+    }
+
+    void increase_year() {
+        year++;
+    }
+
+    void decrease_date(int days) {
+        day -= days;
+        while (day < 1) {
+            month--;
+            if (month < 1) {
+                month = 12;
+                year--;
+            }
+            day += 30; 
+        }
+    }
+
+    string display_date() {
+        return to_string(day) + "/" + to_string(month) + "/" + to_string(year);
+    }
+
+    void display_info() {
+        cout << "Дата: " << display_date() << endl;
+    }
+
+    // Перевантажений бінарний оператор '+' для додавання років
+    ParentClass operator+(int years) {
+        ParentClass result = *this;
+        result.year += years;
+        return result;
+    }
+
+    // Перевантажений бінарний оператор '-' для віднімання днів
+    ParentClass operator-(int days) {
+        ParentClass result = *this;
+        result.day -= days;
+        while (result.day < 1) {
+            result.month--;
+            if (result.month < 1) {
+                result.month = 12;
+                result.year--;
+            }
+            result.day += 30;  
+        }
+        return result;
+    }
+
+    // Перевантажений унарний оператор '++' для збільшення року на 1
+    ParentClass operator++() {
+        year++;
+        return *this;
+    }
+
+    // Перевантажений унарний оператор '--' для зменшення дати на 1 день
+    ParentClass operator--() {
+        day--;
+        if (day < 1) {
+            month--;
+            if (month < 1) {
+                month = 12;
+                year--;
+            }
+            day = 30;  
+        }
+        return *this;
+    }
+};
+
+int main() {
+    ParentClass parent(25, 10, 2023);
+    parent.display_info();
+
+    ParentClass newDate = parent + 1;  
+    newDate.display_info();
+
+    ParentClass newDate2 = parent - 2;  
+    newDate2.display_info();
+
+
+    ++parent;  
+    parent.display_info();
+
+    --parent;  
+    parent.display_info();
+
+    return 0;
+}
