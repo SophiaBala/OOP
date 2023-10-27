@@ -40,24 +40,22 @@ public:
         }
 
         return nearest_index;
-    
-    
     }
-    
 
-
-    
-    T find_diference_between_neg_pos() {
+    T find_difference_between_neg_pos() {
         int first_neg = -1;
         int second_pos = -1;
+        int neg_count = 0;
 
         for (int i = 0; i < size; i++) {
             if (data[i] < 0 && first_neg == -1) {
                 first_neg = i;
             }
             else if (data[i] > 0) {
-                second_pos = i;
-                break;
+                neg_count++;
+                if (neg_count == 1) {
+                    second_pos = i;
+                }
             }
         }
 
@@ -66,25 +64,23 @@ public:
         }
 
         T difference = 0;
+
         for (int i = first_neg + 1; i < second_pos; i++) {
-            difference -= data[i]; // Віднімання
+            difference -= data[i];
         }
 
         return difference;
     }
 
 
-
     void sort_even_odd_swap(std::vector<T>& arr) {
         int size = arr.size();
 
         if (size < 2) {
-            // Немає змін для масивів меншого розміру
             return;
         }
 
         for (int i = 0; i < size - 1; i += 2) {
-            // Перевірка, чи індекс непарний і чи не виходимо за межі масиву
             if (i + 1 < size) {
                 std::swap(arr[i], arr[i + 1]);
             }
@@ -110,7 +106,7 @@ int main() {
     int nearest_index = array.find_nearest_to_mean();
     std::cout << "Index of the element nearest to the mean: " << nearest_index << std::endl;
 
-    int diff = array.find_diference_between_neg_pos();
+    int diff = array.find_difference_between_neg_pos();
     std::cout << "Difference between elements between the first negative and the second positive element: " << diff << std::endl;
 
     array.sort_even_odd_swap(array.data);
