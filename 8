@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+
 using namespace std;
 
 class ParentClass {
@@ -11,17 +12,17 @@ private:
 public:
 
     ParentClass() : day(1), month(1), year(2000) {
-        cout << "Created standard object" << endl;
+        cout << "The object is created (by default)." << endl;
     }
 
 
     ParentClass(int day, int month, int year) : day(day), month(month), year(year) {
-        cout << "Created parametr object" << endl;
+        cout << "The object is created (with parameters)." << endl;
     }
 
 
     ~ParentClass() {
-        cout << "Object with date "  << display_date() << " was destroyed." << endl;
+        cout << "Object with date " << display_date() << " was destroyed." << endl;
     }
 
     void set_date(int day, int month, int year) {
@@ -48,7 +49,7 @@ public:
                 month = 12;
                 year--;
             }
-            day += 30; 
+            day += 30;
         }
     }
 
@@ -77,3 +78,4 @@ int main() {
 
     return 0;
 }
+
