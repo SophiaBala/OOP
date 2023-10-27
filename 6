@@ -2,7 +2,8 @@
 #include <vector>
 #include <algorithm>
 #include <string>
-#include <fstream> // Додана бібліотека для роботи з файлами
+#include <fstream>
+
 
 struct Student {
     std::string name, surname;
@@ -10,7 +11,6 @@ struct Student {
     int roomNumber;
 };
 
-// Функція для вводу даних студента
 Student inputStudentData() {
     Student student;
     std::cout << "Enter student's name and surname (space-separated): ";
@@ -22,42 +22,49 @@ Student inputStudentData() {
     return student;
 }
 
-// Функція для виведення даних студента
+void saveStudentsToFile(const std::vector<Student>& students, const std::string& list) {
+    std::ofstream outputFile(list);
+    if (outputFile.is_open()) {
+        for (const Student& student : students) {
+            outputFile << student.name << " " << student.surname << " "
+                << student.hostelNumber << " " << student.roomNumber << std::endl;
+        }
+        outputFile.close();
+        std::cout << "Data saved to " << list << std::endl;
+    }
+    else {
+        std::cerr << "Unable to open file for writing." << std::endl;
+    }
+}
+
+void loadStudentsFromFile(std::vector<Student>& students, const std::string& list) {
+    std::ifstream inputFile(list);
+
+    if (inputFile.is_open()) {
+        //students.clear(); 
+        Student student;
+        while (inputFile >> student.name >> student.surname >> student.hostelNumber >> student.roomNumber) {
+            students.push_back(student); 
+        }
+        inputFile.close();
+        std::cout << "Data loaded from " << list << std::endl;
+    }
+    else {
+        std::cerr << "Unable to open file for reading." << std::endl;
+    }
+}
+
 void displayStudentInfo(const Student& student) {
     std::cout << "Student's name: " << student.name << " " << student.surname << std::endl;
     std::cout << "Hostel number: " << student.hostelNumber << std::endl;
     std::cout << "Room number: " << student.roomNumber << std::endl;
 }
 
-// Функція для збереження даних у файл
-void saveStudentsToFile(const std::vector<Student>& students, const std::string& filename) {
-    std::ofstream outputFile(filename);
-    if (outputFile.is_open()) {
-        for (const Student& student : students) {
-            outputFile << student.name << " " << student.surname << " "
-                       << student.hostelNumber << " " << student.roomNumber << std::endl;
-        }
-        outputFile.close();
-        std::cout << "Data saved to " << filename << std::endl;
-    } else {
-        std::cerr << "Unable to open file for writing." << std::endl;
-    }
-}
+bool compareStudentsByLastName(const Student& a, const Student& b) {
 
-// Функція для зчитування даних з файлу
-void loadStudentsFromFile(std::vector<Student>& students, const std::string& filename) {
-    std::ifstream inputFile(filename);
-    if (inputFile.is_open()) {
-        students.clear(); // Очищаємо поточний список студентів
-        Student student;
-        while (inputFile >> student.name >> student.surname >> student.hostelNumber >> student.roomNumber) {
-            students.push_back(student); // Додаємо студента до списку
-        }
-        inputFile.close();
-        std::cout << "Data loaded from " << filename << std::endl;
-    } else {
-        std::cerr << "Unable to open file for reading." << std::endl;
-    }
+    std::string lastNameA = a.name.substr(a.name.rfind(' ') + 1);
+    std::string lastNameB = b.name.substr(b.name.rfind(' ') + 1);
+    return lastNameA < lastNameB;
 }
 
 int main() {
@@ -68,63 +75,99 @@ int main() {
         std::cout << std::endl;
         std::cout << "/////////// Menu ///////////" << std::endl;
         std::cout << "1. Enter student data" << std::endl;
-        std::cout << "2. Sort by last name and display" << std::endl;
-        std::cout << "3. Sort by hostel number and display" << std::endl;
+        std::cout << "2. Sort by last name" << std::endl;
+        std::cout << "3. Sort by hostel number" << std::endl;
         std::cout << "4. Display information for all students" << std::endl;
         std::cout << "5. Search students by hostel and room numbers" << std::endl;
-        std::cout << "6. Save data to file" << std::endl; // Нова опція: збереження в файл
-        std::cout << "7. Load data from file" << std::endl; // Нова опція: завантаження з файлу
+        std::cout << "6. Save data to file" << std::endl;
+        std::cout << "7. Load data from file" << std::endl;
         std::cout << "8. Exit" << std::endl;
+        
         std::cout << "Select an option: ";
 
         int choice;
         std::cin >> choice;
 
         switch (choice) {
-            case 1: {
-                Student student = inputStudentData();
-                students.push_back(student);
-                break;
+        case 1: {
+            Student student = inputStudentData();
+            students.push_back(student);
+            break;
+        }
+        case 2: {
+            std::sort(students.begin(), students.end(), compareStudentsByLastName);
+            for (const Student& student : students) {
+                displayStudentInfo(student);
+                std::cout << "----------------------" << std::endl;
             }
-            case 2: {
-                std::sort(students.begin(), students.end(), compareStudentsByLastName);
-                for (const Student& student : students) {
-                    displayStudentInfo(student);
-                    std::cout << "----------------------" << std::endl;
-                }
-                break;
-            }
-            case 3: {
-                std::sort(students.begin(), students.end(), [](const Student& a, const Student& b) {
-                    return a.hostelNumber < b.hostelNumber;
+            break;
+        }
+        case 3: {
+            std::sort(students.begin(), students.end(), [](const Student& a, const Student& b) {
+                return a.hostelNumber < b.hostelNumber;
                 });
-                for (const Student& student : students) {
-                    displayStudentInfo(student);
-                    std::cout << "----------------------" << std::endl;
-                }
-                break;
+            for (const Student& student : students) {
+                displayStudentInfo(student);
+                std::cout << "----------------------" << std::endl;
             }
-            case 4: {
-                for (const Student& student : students) {
-                    displayStudentInfo(student);
-                    std::cout << "----------------------" << std::endl;
-                }
-                break;
+            break;
+        }
+        case 4: {
+            for (const Student& student : students) {
+                displayStudentInfo(student);
+                std::cout << "----------------------" << std::endl;
             }
-            case 5: {
-                int searchHostel, searchRoom;
-                std::cout << "Enter hostel number for search: ";
-                std::cin >> searchHostel;
-                std::cout << "Enter room number for search: ";
-                std::cin >> searchRoom;
+            break;
+        }
+        case 5: {
+            int searchHostel, searchRoom;
+            std::cout << "Enter hostel number for search: ";
+            std::cin >> searchHostel;
+            std::cout << "Enter room number for search: ";
+            std::cin >> searchRoom;
 
-                bool found = false;
-                for (const Student& student : students) {
-                    if (student.hostelNumber == searchHostel && student.roomNumber == searchRoom) {
-                        displayStudentInfo(student);
-                        found = true;
-                    }
+            bool found = false;
+            for (const Student& student : students) {
+                if (student.hostelNumber == searchHostel && student.roomNumber == searchRoom) {
+                    displayStudentInfo(student);
+                    found = true;
                 }
+            }
 
-                if (!found) {
-                    std
+            if (!found) {
+                std::cout << "No matches found." << std::endl;
+            }
+            break;
+        }
+
+        case 6: {
+            std::string list;
+            std::cout << "Enter a file name: ";
+            std::cin >> list;
+            saveStudentsToFile(students, list);
+            break;
+        };
+        case 7: {
+
+            std::string list;
+            std::cout << "Enter a file name: ";
+            std::cin >> list;
+            loadStudentsFromFile(students, list);
+            break;
+
+        };
+        case 8: {
+            exitProgram = true;
+            break;
+        }
+        default: {
+            std::cout << "Invalid choice. Please try again." << std::endl;
+            break;
+        }
+
+
+        }
+    }
+
+    return 0;
+}
