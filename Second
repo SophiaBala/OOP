@@ -1,0 +1,27 @@
+//Визначте перевантажені функції square для знаходження квадратів цілих
+//чисел, чисел з плаваючою комою одинарної та подвійної точності.
+
+
+
+
+#include <iostream>
+
+int square(int x) {
+    return x * x;
+}
+
+float square(float x) {
+    return x * x;
+}
+
+double square(double x) {
+    return x * x;
+}
+
+int main() {
+    std::cout << "The square of an integer: " << square(7) << std::endl;
+    std::cout << "Square of a float number (single-precision): " << square(1.23456789e30f) << std::endl;
+    std::cout << "Square of a float number (double precision): " << square(1.23456789e30) << std::endl;
+
+    return 0;
+}
