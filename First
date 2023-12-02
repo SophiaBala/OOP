@@ -1,0 +1,73 @@
+/*Клас Int імітує стандартний тип даних int.Єдине поле цього класу
+повинне мати тип int.Передбачити конструктори класу та методи, що будуть
+ініціалізувати його об‘єкти нулем, цілим значенням, виводити значення на
+екран, а також додавати, віднімати, множити і ділити два цілих числа*/
+
+
+
+#include <iostream>
+
+class Int {
+private:
+    int value;
+
+public:
+    
+    Int() : value(0) {}
+
+    //ціле знач
+    Int(int val) : value(val) {}
+
+    void display() const {
+        std::cout << value << std::endl;
+    }
+
+    //+
+    Int add(const Int& other) const {
+        return Int(value + other.value);
+    }
+
+    //-
+    Int subtract(const Int& other) const {
+        return Int(value - other.value);
+    }
+
+    //*
+    Int multiply(const Int& other) const {
+        return Int(value * other.value);
+    }
+
+    //діл
+    Int divide(const Int& other) const {
+        if (other.value != 0) {
+            return Int(value / other.value);
+        }
+        else {
+            std::cerr << "Error: Division by zero." << std::endl;
+            return Int(0);
+        }
+    }
+};
+
+int main() {
+    
+    Int a;         
+    Int b(5);      
+
+    a.display(); 
+    b.display(); 
+
+    Int sum = a.add(b);
+    sum.display(); 
+
+    Int difference = a.subtract(b);
+    difference.display();
+
+    Int product = a.multiply(b);
+    product.display();  
+
+    Int quotient = a.divide(b);
+    quotient.display(); 
+
+    return 0;
+}
